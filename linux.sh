@@ -1,0 +1,62 @@
+list-apks() {
+    if [ -n "$1" ]; then
+        adb shell "pm list packages -3 | sed 's/package://' | grep -i '$1'"
+    else
+        adb shell "pm list packages -3 | sed 's/package://'"
+    fi
+}
+
+pull-apks() {
+    if [ -z "$1" ]; then
+        echo -e "\e[31m[-] Error: Package name cannot be null. Ex: pull-apks com.example\e[0m"
+        return 1
+    fi
+
+    local pkg_name="$1"
+    
+    local paths=$(adb shell pm path "$pkg_name" | tr -d '\r')
+
+    if [ -z "$paths" ]; then
+        echo -e "\e[31m[-] Package '$pkg_name' not found on the device.\e[0m"
+        return 1
+    fi
+
+    mkdir -p "./$pkg_name"
+    echo -e "\e[36m[+] Extracting APKs from '$pkg_name'\e[0m"
+
+    for line in $paths; do
+        local apk_path="${line#package:}"
+        
+        if [ -n "$apk_path" ]; then
+            echo "-> Pulling: $apk_path"
+            adb pull "$apk_path" "./$pkg_name/"
+        fi
+    done
+    
+    echo -e "\e[32m[+] Complete!\e[0m"
+}
+
+frida-srv() {
+    local action="$1"
+    local bin_name="${2:-und}"
+    local path="/data/local/tmp/$bin_name"
+
+    if [ "$action" = "start" ]; then
+        echo -e "\e[36m[+] Starting $bin_name in background\e[0m"
+        adb shell "su -c 'chmod +x $path && nohup $path >/dev/null 2>&1 &'"
+    elif [ "$action" = "stop" ]; then
+        echo -e "[-] Killing $bin_name..."
+        adb shell "su -c 'killall -9 $bin_name 2>/dev/null'"
+        echo -e "\e[32m[+] Server stopped!\e[0m"
+    else
+        echo -e "\e[31m[-] Error: Invalid command. How to use:\e[0m"
+        echo -e "    \e[31mfrida-srv start [bin_name]\e[0m"
+        echo -e "    \e[31mfrida-srv stop [bin_name]\e[0m"
+        return 1
+    fi
+}
+
+get-front() {
+    echo -e "\e[36m[+] Frontmost App (Current Focus):\e[0m"
+    adb shell "dumpsys window | grep mCurrentFocus"
+}
