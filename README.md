@@ -10,4 +10,4 @@ notepad $PROFILE
 
 ## Linux Version
 
-Paste at the end of .bashrc/.zshrc or any variant.
+Paste at the end of .bashrc/.zshrc or any variation.
