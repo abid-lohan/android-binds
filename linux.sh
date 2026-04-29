@@ -38,7 +38,7 @@ pull-apks() {
 
 frida-srv() {
     local action="$1"
-    local bin_name="${2:-und}"
+    local bin_name="${2:-frida-server}"
     local path="/data/local/tmp/$bin_name"
 
     if [ "$action" = "start" ]; then

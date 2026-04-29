@@ -46,7 +46,7 @@ function frida-srv {
         [string]$Action,
 
         [Parameter(Position=1)]
-        [string]$CustomBinaryName = "und"
+        [string]$CustomBinaryName = "frida-server"
     )
 
     $path = "/data/local/tmp/$CustomBinaryName"
