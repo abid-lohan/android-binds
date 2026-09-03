@@ -36,24 +36,18 @@ pull-apks() {
     echo -e "\e[32m[+] Complete!\e[0m"
 }
 
-frida-srv() {
-    local action="$1"
-    local bin_name="${2:-frida-server}"
+frida-on() {
+    local bin_name="${1:-frida-server}"
     local path="/data/local/tmp/$bin_name"
+    echo -e "\e[36m[+] Starting $bin_name in background\e[0m"
+    adb shell "su -c 'chmod +x $path && nohup $path >/dev/null 2>&1 &'"
+}
 
-    if [ "$action" = "start" ]; then
-        echo -e "\e[36m[+] Starting $bin_name in background\e[0m"
-        adb shell "su -c 'chmod +x $path && nohup $path >/dev/null 2>&1 &'"
-    elif [ "$action" = "stop" ]; then
-        echo -e "[-] Killing $bin_name..."
-        adb shell "su -c 'killall -9 $bin_name 2>/dev/null'"
-        echo -e "\e[32m[+] Server stopped!\e[0m"
-    else
-        echo -e "\e[31m[-] Error: Invalid command. How to use:\e[0m"
-        echo -e "    \e[31mfrida-srv start [bin_name]\e[0m"
-        echo -e "    \e[31mfrida-srv stop [bin_name]\e[0m"
-        return 1
-    fi
+frida-off() {
+    local bin_name="${1:-frida-server}"
+    echo -e "[-] Killing $bin_name..."
+    adb shell "su -c 'killall -9 $bin_name 2>/dev/null'"
+    echo -e "\e[32m[+] Server stopped!\e[0m"
 }
 
 get-front() {

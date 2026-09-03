@@ -7,8 +7,11 @@ Some terminal binds, useful for dealing with Android, to enhance speed on pentes
 |----------|----------|-------------|
 | `list-apks` | Windows, Linux | Lists all third-party packages installed on the device. It's possible to filter passing an argument. |
 | `pull-apks` | Windows, Linux | Extracts split APK files from a specified package to a local directory. |
-| `frida-srv` | Windows, Linux | Manages Frida server binary on the device. Supports `start` and `stop` actions. Allows specifying a custom binary name. |
+| `frida-on` | Windows, Linux | Starts Frida server binary on the device in the background. Allows specifying a custom binary name. |
+| `frida-off` | Windows, Linux | Kills the Frida server binary on the device. Allows specifying a custom binary name. |
 | `get-front` | Windows, Linux | Displays the currently focused/frontmost activity of the application running on the device. |
+| `burp-on` | Windows, Linux | Enables global HTTP proxy pointing to Burp Suite via adb reverse. |
+| `burp-off` | Windows, Linux | Disables global HTTP proxy and removes adb reverse port forwarding. |
 
 ## Windows Version
 

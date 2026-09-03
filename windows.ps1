@@ -40,27 +40,27 @@ function pull-apks {
     Write-Host "[+] Complete!" -ForegroundColor Green
 }
 
-function frida-srv {
+function frida-on {
     param(
-        [Parameter(Mandatory = $true, Position = 0)]
-        [ValidateSet("start", "stop")]
-        [string]$Action,
-
-        [Parameter(Position = 1)]
+        [Parameter(Position = 0)]
         [string]$CustomBinaryName = "frida-server"
     )
 
     $path = "/data/local/tmp/$CustomBinaryName"
 
-    if ($Action -eq "start") {
-        Write-Host "[+] Starting $CustomBinaryName in background" -ForegroundColor Green
-        adb shell "su -c 'chmod +x $path && nohup $path >/dev/null 2>&1 &'"
-    } 
-    elseif ($Action -eq "stop") {
-        Write-Host "[-] Killing $CustomBinaryName..."
-        adb shell "su -c 'killall -9 $CustomBinaryName 2>/dev/null'"
-        Write-Host "[+] Server stopped!" -ForegroundColor DarkRed
-    }
+    Write-Host "[+] Starting $CustomBinaryName in background" -ForegroundColor Green
+    adb shell "su -c 'chmod +x $path && nohup $path >/dev/null 2>&1 &'"
+}
+
+function frida-off {
+    param(
+        [Parameter(Position = 0)]
+        [string]$CustomBinaryName = "frida-server"
+    )
+
+    Write-Host "[-] Killing $CustomBinaryName..."
+    adb shell "su -c 'killall -9 $CustomBinaryName 2>/dev/null'"
+    Write-Host "[+] Server stopped!" -ForegroundColor DarkRed
 }
 
 function get-front {
