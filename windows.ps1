@@ -2,14 +2,15 @@ function list-apks {
     param([string]$grep = "")
     if ($grep) {
         adb shell "pm list packages -3 | sed 's/package://' | grep -i '$grep'"
-    } else {
+    }
+    else {
         adb shell "pm list packages -3 | sed 's/package://'"
     }
 }
 
 function pull-apks {
     param(
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory = $true)]
         [string]$PackageName
     )
 
@@ -41,11 +42,11 @@ function pull-apks {
 
 function frida-srv {
     param(
-        [Parameter(Mandatory=$true, Position=0)]
+        [Parameter(Mandatory = $true, Position = 0)]
         [ValidateSet("start", "stop")]
         [string]$Action,
 
-        [Parameter(Position=1)]
+        [Parameter(Position = 1)]
         [string]$CustomBinaryName = "frida-server"
     )
 
@@ -65,4 +66,18 @@ function frida-srv {
 function get-front {
     Write-Host "[+] Frontmost App (Current Focus):" -ForegroundColor Cyan
     adb shell "dumpsys window | grep mCurrentFocus"
+}
+
+function burp-on {
+    adb reverse tcp:8080 tcp:8080
+    adb shell settings put global http_proxy 127.0.0.1:8080
+
+    Write-Host "[+] Proxy ON - 127.0.0.1:8080" -ForegroundColor Green
+}
+
+function burp-off {
+    adb shell settings put global http_proxy :0
+    adb reverse --remove tcp:8080
+
+    Write-Host "[+] Proxy OFF" -ForegroundColor DarkRed
 }

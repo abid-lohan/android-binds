@@ -60,3 +60,17 @@ get-front() {
     echo -e "\e[36m[+] Frontmost App (Current Focus):\e[0m"
     adb shell "dumpsys window | grep mCurrentFocus"
 }
+
+burp-on() {
+    adb reverse tcp:8080 tcp:8080
+    adb shell settings put global http_proxy 127.0.0.1:8080
+
+    echo -e "\e[36m[+] Proxy ON - 127.0.0.1:8080\e[0m"
+}
+
+burp-off() {
+    adb shell settings put global http_proxy :0
+    adb reverse --remove tcp:8080
+
+    echo -e "\e[32m[-] Proxy OFF\e[0m"
+}
